@@ -1,87 +1,82 @@
 document.addEventListener('DOMContentLoaded' , () => {
     const bird = document.querySelector('.bird')
     const gameDisplay = document.querySelector('.game-container')
-    const ground = document.querySelector('.ground-moving')
+    const ground = document.querySelector('.ground')
+    const GameOverText = document.querySelector('#gameOver')
 
-    let birdLeft = 220
-    let birdBottom = 100
-    let gravity = 3
-    let isGameOver = false
-    let gap = 430
+    var birdLeft = 25;
+    var birdBottom = 50;
+    var gravity = 0.5;
+    var isGameOver = false;
 
-
-    function startGame() {
+    function gameStart() {
         birdBottom -= gravity
-        bird.style.bottom = birdBottom + 'px'
-        bird.style.left = birdLeft + 'px'
-    }
-    let gameTimerId = setInterval(startGame, 20)
+        bird.style.bottom = birdBottom + '%'
+        bird.style.left = birdLeft + '%'
 
+        GameOverText.style.display = 'none';
+    }
+
+    let timerId = setInterval(gameStart, 20)
+    
+    // SpaceBar Jump
     function control(e) {
         if (e.keyCode === 32) {
             jump()
         }
     }
-
+    
     function jump() {
-        if (birdBottom < 500) birdBottom += 50
-        bird.style.bottom = birdBottom + 'px'
+        if (birdBottom < 81) {
+            birdBottom += 10
+            bird.style.bottom = birdBottom + "%"
+        }
         console.log(birdBottom)
     }
+
     document.addEventListener('keyup', control)
 
-
     function generateObstacle() {
-        let obstacleLeft = 500
-        let randomHeight = Math.random() * 60
-        let obstacleBottom = randomHeight
+        var randomHeight = Math.random() * 40
+
+        var ObstacleLeft = 60
+        var ObstacleBottom = randomHeight
+
         const obstacle = document.createElement('div')
-        const topObstacle = document.createElement('div')
-        if (!isGameOver) {
-            obstacle.classList.add('obstacle')
-            topObstacle.classList.add('topObstacle')
-        }
-        gameDisplay.appendChild(obstacle)
-        gameDisplay.appendChild(topObstacle)
-        obstacle.style.left = obstacleLeft + 'px'
-        topObstacle.style.left = obstacleLeft + 'px'
-        obstacle.style.bottom = obstacleBottom + 'px'
-        topObstacle.style.bottom = obstacleBottom + gap + 'px'
+        if(!isGameOver) obstacle.classList.add('obstacle')
+        gameDisplay.append(obstacle)
 
+        obstacle.style.left = ObstacleLeft + "%"
+        obstacle.style.bottom = ObstacleBottom + "%"
+    
         function moveObstacle() {
-            obstacleLeft -=2
-            obstacle.style.left = obstacleLeft + 'px'
-            topObstacle.style.left = obstacleLeft + 'px'
-
-            if (obstacleLeft === -60) {
-                clearInterval(timerId)
+            ObstacleLeft -=0.2
+            obstacle.style.left = ObstacleLeft + '%'
+            console.log(ObstacleLeft)
+            if (ObstacleLeft === 0){
+                clearInterval(timerId2)
                 gameDisplay.removeChild(obstacle)
-                gameDisplay.removeChild(topObstacle)
             }
+
             if (
-                obstacleLeft > 200 && obstacleLeft < 280 && birdLeft === 220 &&
-                (birdBottom < obstacleBottom + 153 || birdBottom > obstacleBottom + gap -200)||
-                birdBottom === 0 
+                ObstacleLeft > 14 && ObstacleLeft < 17 && birdBottom < ObstacleBottom + 5 && birdLeft === 25 ||
+                birdBottom === 0
                 ) {
                 gameOver()
-                clearInterval(timerId)
+                clearInterval(timerId2)
             }
         }
-        let timerId = setInterval(moveObstacle, 20) 
-        if (!isGameOver) setTimeout(generateObstacle, 3000)
-
+        let timerId2 = setInterval(moveObstacle, 20)
+        if(!isGameOver) setTimeout(generateObstacle, 3000)
     }
     generateObstacle()
 
-
     function gameOver() {
-        clearInterval(gameTimerId)
-        console.log('game over')
+        clearInterval(timerId)
         isGameOver = true
         document.removeEventListener('keyup', control)
-        ground.classList.add('ground')
-        ground.classList.remove('ground-moving')
+        GameOverText.style.display = 'block';
     }
-
-
 })
+
+// https://youtu.be/8xPsg6yv7TU?t=4196
