@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded' , () => {
     const gameDisplay = document.querySelector('.game-container')
     const ground = document.querySelector('.ground')
     const GameOverText = document.querySelector('#gameOver')
+    const tapButton = document.querySelector('#tapButton')
 
     var birdLeft = 25;
     var birdBottom = 50;
@@ -35,6 +36,8 @@ document.addEventListener('DOMContentLoaded' , () => {
     }
 
     document.addEventListener('keyup', control)
+
+    tapButton.addEventListener('click', jump)
 
     function generateObstacle() {
         var randomHeight = Math.random() * 40
@@ -75,6 +78,7 @@ document.addEventListener('DOMContentLoaded' , () => {
         clearInterval(timerId)
         isGameOver = true
         document.removeEventListener('keyup', control)
+        tapButton.removeEventListener('click', jump)
         GameOverText.style.display = 'block';
     }
 })
