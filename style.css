@@ -41,6 +41,8 @@
 #tapButton {
     display: absolute;
     padding: 6%;
+    font-size: 190%;
+    width: 100%;
 }
 
 footer {
